@@ -1,4 +1,12 @@
 <script setup lang="ts">
+import type { Database } from '~/types/database.types';
+
+
+const supabase = useSupabaseClient<Database>();
+const {data: {user}} = await supabase.auth.getUser();
+
+const message = ref<{type: string, text: string}>();
+
 
 </script>
 
@@ -18,8 +26,9 @@
 						</NuxtLink>
 					</li>
 					<li className="self-center">
-						<NuxtLink class="btn_header" to="/me">
+						<NuxtLink class="btn_header flex gap-1" to="/me">
 							Me
+							<span v-if="user">({{ user.user_metadata.first_name }})</span>
 						</NuxtLink>
 					</li>
 				</ul>

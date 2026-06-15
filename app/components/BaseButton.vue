@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  variant?: 'primary' | 'danger';
+  variant?: 'primary' | 'selected' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
@@ -15,8 +15,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Tailwind классы для каждого варианта и размера
 const variantClasses: Record<NonNullable<Props['variant']>, string> = {
-  primary: 'p-5 text-green-200 shadow-xl shadow-green-200/25 rounded-xl hover:shadow-green-200/50',
-  danger: 'p-5 text-red-400 shadow-xl shadow-red-300/25 rounded-xl hover:shadow-red-400/50',
+  primary: 'text-green-200 shadow-lg shadow-green-200/25 rounded-xl hover:shadow-green-200/50',
+  selected: 'text-green-200 shadow-lg shadow-green-200/60 rounded-xl',
+  danger: 'text-red-400 shadow-lg shadow-red-300/25 rounded-xl hover:shadow-red-400/50',
 };
 
 const sizeClasses: Record<NonNullable<Props['size']>, string> = {
@@ -26,7 +27,7 @@ const sizeClasses: Record<NonNullable<Props['size']>, string> = {
 };
 
 const buttonClasses = computed(() => {
-  const baseClasses = 'w-full cursor-pointer inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'p-5 w-full cursor-pointer inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-gray-400/40';
   
   return [
     baseClasses,
@@ -42,7 +43,6 @@ const buttonClasses = computed(() => {
     :type="type"
     :disabled="disabled"
     :class="buttonClasses"
-    @click="$emit('click', $event)"
   >
     <slot />
   </button>

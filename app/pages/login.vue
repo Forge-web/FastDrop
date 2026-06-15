@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import BaseButton from '~/components/BaseButton.vue'
 import BaseInput from '~/components/BaseInput.vue'
+import type { Database } from '~/types/database.types'
 
-const supabase = useSupabaseClient()
+const supabase = useSupabaseClient<Database>()
 const email = ref('')
 const password = ref('')
 const errorMsg = ref('')
 const loading = ref(false)
+
+const {data: {user}} = await supabase.auth.getUser();
+
+if (user) {
+  navigateTo('/me');
+}
 
 const signIn = async () => {
   loading.value = true
@@ -17,7 +24,9 @@ const signIn = async () => {
     password: password.value,
   })
   if (error) errorMsg.value = error.message
-  else await navigateTo('/dashboard') // Перенаправление в защищённую зону
+  else {
+    await reloadNuxtApp();
+  }
   loading.value = false
 }
 </script>

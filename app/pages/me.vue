@@ -1,9 +1,42 @@
 <script setup lang="ts">
-import ListFiles from '~/components/user/listFiles.vue';
+import BaseButton from '~/components/BaseButton.vue';
+import ListFiles from '~/components/storage/ListFiles.vue';
+import UploadFiles from '~/components/storage/UploadFiles.vue';
+import type { Database } from '~/types/database.types';
 
+definePageMeta({
+	middleware: ['auth']
+})
 
 const user = useSupabaseUser();
+const supabase = useSupabaseClient<Database>();
 
+const message = ref<{type: string, text: string}>();
+
+const states = {
+	listFalse: 'listFalse',
+	uploadFiles: 'uploadFiles'
+};
+
+const currentState = ref(states.uploadFiles);
+
+
+const signOut = async () => {
+	const { error } = await supabase.auth.signOut();
+	if (error) {
+		message.value = {type: 'error', text: error.message};
+	}
+	reloadNuxtApp();
+}
+
+const changeStatePage = (toChangeState: string) => {
+	console.log(toChangeState);
+	if (toChangeState == currentState.value) {
+		currentState.value = '';
+	} else {
+		currentState.value = toChangeState;
+	}
+}
 
 </script>
 
@@ -11,7 +44,7 @@ const user = useSupabaseUser();
 
 <div class="flex justify-center">
 
-	<div class="flex flex-col gap-10"
+	<!-- <div class="flex flex-col gap-10"
 		v-if="!user"
 	>	
 		<div>
@@ -33,10 +66,42 @@ const user = useSupabaseUser();
 				Register
 			</button>
 		</div>
-	</div>
+	</div> -->
 
-	<div v-else>
-		<ListFiles />
+	<div
+		class="flex flex-col gap-10"
+	>
+
+		<div 
+			class="flex flex-col gap-5"
+		>
+			<BaseButton @click="signOut">
+				Выйти из аккаунта
+			</BaseButton>
+			<BaseButton
+				v-if="currentState==states.listFalse"
+				disabled
+			>
+				Удалить все файлы
+			</BaseButton>
+		</div>
+		<div class="flex gap-5 ">
+			<BaseButton 
+				@click="changeStatePage(states.listFalse)" 
+				:variant="currentState==states.listFalse ? 'selected': 'primary'"
+			>
+				Список файлов
+			</BaseButton>
+			<BaseButton
+				@click="changeStatePage(states.uploadFiles)" 
+				:variant="currentState==states.uploadFiles ? 'selected': 'primary'"
+			>
+				Загрузить файлы
+			</BaseButton>
+		</div>
+
+		<ListFiles v-if="currentState==states.listFalse" />
+		<UploadFiles v-if="currentState==states.uploadFiles" />
 	</div>
 
 </div>
