@@ -43,7 +43,9 @@ let search_result = ref();
 		</form>
 	</div>
 	<div v-if="search_result">
-		<div v-for="_user in search_result" >
+		<div v-for="_user in search_result" 
+			class=""
+		>
 			<NuxtLink :to="{name: 'profile-name', params:{name: _user.name}}">
 				<CardUser
 					:name="_user.name"

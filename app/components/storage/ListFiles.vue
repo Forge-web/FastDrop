@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import type { JwtPayload } from '@supabase/supabase-js';
+import type { JwtPayload, PostgrestError } from '@supabase/supabase-js';
 import DownloadButton from './DownloadButton.vue';
 import { formatFileSize } from '#imports';
 import BaseButton from '../BaseButton.vue';
 import type { Database, Tables } from '~/types/database.types.js';
+import type { UserLimit } from '~/types/getLimitStorageUser.types.js';
 
 //ref
 const message = ref<{type: string, text: string}>();
@@ -15,29 +16,12 @@ const supabase = useSupabaseClient<Database>();
 const user = useSupabaseUser();
 const userPayload = user.value as JwtPayload;
 
-const getLimitStorageOfUser = async () => {
-	const {data, error} = await supabase
-		.from('users')
-		.select('limit_storage')
-		.eq('auth_id', userPayload.sub)
-	
-	if (data !== null && data[0])
-		limitStorage.value = data[0].limit_storage as number;
-}
-	
 
 //storage
 const userFiles = ref<any[]>([]);
-const currentSizeFiles = ref(0);
-const limitStorage = ref(0);
+const limitStorage = ref<UserLimit>(await getLimitStorageUser() as UserLimit);
+const currentSizeFiles = ref(limitStorage.value.use_of_limit as number);
 
-
-//function
-const getSizeAllFiles = () => {
-	userFiles.value.forEach(file => {
-		currentSizeFiles.value += file.size;
-	});
-}
 
 const loadUserFiles = async () => {
 	if (!user.value) return
@@ -61,11 +45,16 @@ const removeFile = async (file: Tables<'user-files'>, index: number) => {
 		.delete()
 		.eq('storage_path', file.storage_path)
 
-	if (storageError)
+	if (storageError) {
 		message.value = {type: 'error', text: storageError.message}
+		return;
+	}
+		
 
-	if (dbError)
+	if (dbError) {
 		message.value = {type: 'error', text: dbError.message}
+		return;
+	}
 
 	
 	currentSizeFiles.value -= file.size as number;
@@ -75,25 +64,24 @@ const removeFile = async (file: Tables<'user-files'>, index: number) => {
 
 onMounted(async () => {
 	await loadUserFiles();
-	await getLimitStorageOfUser();
-	getSizeAllFiles();
 });
-
 </script>
 
 <template>
 
 <div class="">
-	<div class="px-10 pt-2 pb-10 flex flex-col max-w-100 gap-5 justify-center rounded-xl shadow-xl shadow-green-200/20">
-		<div class="text-xl">Фаши файлы</div>
-		<div class="">{{ formatFileSize(currentSizeFiles) }} / {{ formatFileSize(limitStorage) }}</div>
+	<div class="max-md:px-2 pt-2 pb-10 flex flex-col max-w-100 gap-5 justify-center rounded-xl shadow-xl shadow-green-200/20">
+		<div class="text-xl ">Фаши файлы</div>
+		
 		<div v-for="file, index in userFiles" :key="file.id"
-			class="flex flex-col rounded-xl shadow-xl p-5"
+			class="flex flex-col rounded-xl shadow-xl"
 		>
+		
 			<div><span class="text-gray-400/80">Name:</span> <span class="">{{ file.name }}</span></div>
 			<div><span class="text-gray-400/80">Size:</span> <span class="">{{ formatFileSize(file.size) }}</span></div>
 			<div><span class="text-gray-400/80">Type:</span> <span class="">{{ file.mime_type }}</span></div>
 			<div v-if="message?.type=='error'" class="text-red-400/50">{{ message.text }}</div>
+		
 
 			<div class="flex flex-col gap-2">
 				<DownloadButton

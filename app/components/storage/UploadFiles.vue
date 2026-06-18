@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Database } from '~/types/database.types';
 import DragDropFile from './DragDropFile.vue';
+import type { UserLimit } from '~/types/getLimitStorageUser.types.js';
 
 type BodyFile = {
   lastModified: number,
@@ -29,65 +30,77 @@ const user = useSupabaseUser();
 const uploadingFile = ref(false);
 const fileUploadProgress = ref(0);
 const uploadedFiles = ref<bucketFiles>([]);
+const limitStorage = ref<UserLimit>(await getLimitStorageUser() as UserLimit);
+const currentBucketSize = ref(0);
 
 const message = ref<{type: string, text: string}>();
 
 const uploadToStorage = async (file: bucketFiles[0]) => {
+  if (user && user.value) {
     try {
-      // Создаём путь: user-files/{user_id}/{timestamp}_{original_name}
-      const timestamp = Date.now()
-      const safeName = file.body.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-      const filePath = `${user.value.sub}/${timestamp}_${safeName}`
-  
-      // Загружаем в Storage
-      const { data, error: uploadError } = await supabase.storage
-        .from('user-files')
-        .upload(filePath, file.body, {
-          cacheControl: '3600',
-          upsert: false
-        })
-  
-      if (uploadError) throw uploadError
-  
-      // Получаем публичный URL (если bucket публичный) или создаём signed URL
-      // Для приватных файлов лучше не хранить постоянный URL, а генерировать при скачивании.
-      // Здесь сохраним путь, а URL будем запрашивать динамически.
-  
-      // Сохраняем метаданные в таблицу
-      const { error: dbError } = await supabase
-        .from('user-files')
-        .insert({
-          user_id: user.value.sub,
-          name: file.body.name,
-          storage_path: filePath,
-          size: file.body.size,
-          mime_type: file.body.type,
-        })
-      
-        file.status = StatusUploadFile.done;
-      
-      if (dbError) throw dbError
-  
-      // Обновляем список
-    } catch (err: any) {
-      message.value = { type: 'error', text: err.message + " " + err }
-      file.status = StatusUploadFile.error;
-    } finally {
-      uploadingFile.value = false
-      fileUploadProgress.value = 0
-    }
+        // Создаём путь: user-files/{user_id}/{timestamp}_{original_name}
+        const timestamp = Date.now()
+        const safeName = file.body.name.replace(/[^a-zA-Z0-9.-]/g, '_')
+        const filePath = `${user.value.sub}/${timestamp}_${safeName}`
+    
+        // Загружаем в Storage
+        const { data, error: uploadError } = await supabase.storage
+          .from('user-files')
+          .upload(filePath, file.body, {
+            cacheControl: '3600',
+            upsert: false
+          })
+    
+        if (uploadError) throw uploadError
+    
+        // Получаем публичный URL (если bucket публичный) или создаём signed URL
+        // Для приватных файлов лучше не хранить постоянный URL, а генерировать при скачивании.
+        // Здесь сохраним путь, а URL будем запрашивать динамически.
+    
+        // Сохраняем метаданные в таблицу
+        const { error: dbError } = await supabase
+          .from('user-files')
+          .insert({
+            user_id: user.value.sub,
+            name: file.body.name,
+            storage_path: filePath,
+            size: file.body.size,
+            mime_type: file.body.type,
+          })
+        
+          file.status = StatusUploadFile.done;
+        
+        if (dbError) throw dbError
+    
+        // Обновляем список
+      } catch (err: any) {
+        message.value = { type: 'error', text: err.message + " " + err }
+        file.status = StatusUploadFile.error;
+      } finally {
+        uploadingFile.value = false
+        fileUploadProgress.value = 0
+      }
+  }
 }
 
 const itrUploadToStorage = async () => {
-  uploadedFiles.value.forEach(async file => {
-    await uploadToStorage(file)    
-  });
+  if (currentBucketSize.value <= limitStorage.value.available_limit.valueOf() && currentBucketSize.value <= 52_428_800)
+    uploadedFiles.value.forEach(async file => {
+      await uploadToStorage(file)    
+    });
+  else {
+    uploadedFiles.value.forEach(file => {
+      file.status = StatusUploadFile.error
+    });
+    message.value = {type: 'error', text: 'Размер загружаемых файлов > доступного лимита'}
+    return;
+  }
 }
 
 const handleUploadFiles = async (files: BodyFile[]) => {
-
   files.forEach(async file=> {
-    const fileData = {body: file, status:StatusUploadFile.uploading};
+    let fileData = {body: file, status:StatusUploadFile.uploading};
+    currentBucketSize.value += file.size;
     uploadedFiles.value.push(fileData)
   })
   await itrUploadToStorage();
@@ -114,7 +127,7 @@ const handleUploadFiles = async (files: BodyFile[]) => {
           [
             file.status==StatusUploadFile.uploading ? 'shadow-gray-200/20' : '',
             file.status==StatusUploadFile.done ? 'shadow-green-200/20' : '',
-            file.status==StatusUploadFile.error ? 'shadow-red-400/30' : '',
+            file.status==StatusUploadFile.error ? 'shadow-red-400/30 text-red-400' : '',
           ]
           "
         >
@@ -136,8 +149,10 @@ const handleUploadFiles = async (files: BodyFile[]) => {
       </ul>
   </div>
   
-  <div v-if="message">
-    <p>{{ message.type }}</p>
+  <div v-if="message"
+    class="text-red-200 flex flex-col my-5 gap-5"
+  >
+    <p class="text-lg">{{ message.type }}</p>
     <p>{{ message.text }}</p>
   </div>
 

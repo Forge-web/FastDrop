@@ -19,7 +19,7 @@ const signUp = async () => {
   loading.value = true
   errorMsg.value = ''
   successMsg.value = ''
-  const { error } = await supabase.auth.signUp({
+  const { data: userSignUp, error: userSignUpError } = await supabase.auth.signUp({
     email: email.value,
     password: password.value,
     options: {
@@ -28,8 +28,25 @@ const signUp = async () => {
       }
     }
   })
-  if (error) errorMsg.value = error.message
-  else successMsg.value = 'Регистрация успешна! Проверьте вашу почту для подтверждения.'
+  if (userSignUp && userSignUp.user) {
+    const {data: userAddTableUsers, error: userAddTableUsersError} = await supabase
+      .from('users')
+      .insert({
+        auth_id: userSignUp.user.id,
+        name: userSignUp.user.user_metadata.first_name
+      });
+    if (userAddTableUsersError) {
+      errorMsg.value = userAddTableUsersError.message;
+    }
+  }
+
+  if (userSignUpError) {
+    errorMsg.value = userSignUpError.message
+  } else { 
+    successMsg.value = 'Регистрация успешна!'
+    reloadNuxtApp();
+    navigateTo('/me');
+  }
   loading.value = false
 }
 </script>
@@ -47,41 +64,47 @@ const signUp = async () => {
           <div>
             <label for="email-address" class="sr-only">Email</label>
             <BaseInput 
-				v-model="email" id="email-address" name="email" 
-				type="email" autocomplete="email" required
-				placeholder="Email"
-			/>
+              v-model="email" id="email-address" name="email" 
+              type="email" autocomplete="email" required
+              placeholder="Email"
+            />
           </div>
           <div>
             <label for="email-address" class="sr-only">Email</label>
             <BaseInput
-				v-model="first_name" id="first-name" name="first-name" 
-				type="text" autocomplete="first_name" required
-				placeholder="First Name"
-			/>
+              v-model="first_name" id="first-name" name="first-name" 
+              type="text" required placeholder="Имя"
+            />
           </div>
           <div>
             <label for="password" class="sr-only">Пароль</label>
             <BaseInput
-				v-model="password" id="password" name="password" 
-				type="password" autocomplete="new-password" required
-				placeholder="Пароль"
-			/>
+              v-model="password" id="password" name="password" 
+              type="password" required placeholder="Пароль"
+            />
           </div>
           <div>
             <label for="confirm-password" class="sr-only">Подтвердите пароль</label>
             <BaseInput
-				v-model="confirmPassword" id="confirm-password" name="confirm-password" type="password"
-				autocomplete="new-password" required placeholder="Подтвердите пароль"
-			/>
+              v-model="confirmPassword" id="confirm-password" name="confirm-password" 
+              type="password" required placeholder="Подтвердите пароль"
+            />
           </div>
         </div>
         <div class="py-5">
-			<BaseButton type="submit" :disabled="loading">
-				Register
-			</BaseButton>
+          <BaseButton type="submit" :disabled="loading">
+            Зарегистрироваться
+          </BaseButton>
         </div>
       </form>
+
+      <div class="flex flex-col">
+        <p class="mt-2 text-center text-sm text-gray-400">
+          Уже есть аккаунт?
+          <NuxtLink to="/login" class="font-medium text-green-200">Войти в аккаунт</NuxtLink>
+        </p>
+      </div>
+
       <p v-if="errorMsg" class="mt-2 text-center text-sm text-red-600">{{ errorMsg }}</p>
       <p v-if="successMsg" class="mt-2 text-center text-sm text-green-600">{{ successMsg }}</p>
     </div>
