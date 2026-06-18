@@ -7,8 +7,8 @@ async function search_user_result() {
 	if (search_user_name.value != '') {
 		const {data, error} = await client
 			.from('users')
-			.select(`id, name`);
-			// .eq('name', search_user_name.value);
+			.select(`id, name`)
+			.eq('name', search_user_name.value);
 		search_result.value = data;
 	} else {
 		search_result.value = '';
