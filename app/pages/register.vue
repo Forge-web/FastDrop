@@ -10,6 +10,7 @@ const confirmPassword = ref('')
 const errorMsg = ref('')
 const successMsg = ref('')
 const loading = ref(false)
+const user = ref();
 
 const signUp = async () => {
   if (password.value !== confirmPassword.value) {
@@ -19,6 +20,8 @@ const signUp = async () => {
   loading.value = true
   errorMsg.value = ''
   successMsg.value = ''
+
+  //регистрируем юзера в supabase auth
   const { data: userSignUp, error: userSignUpError } = await supabase.auth.signUp({
     email: email.value,
     password: password.value,
@@ -28,6 +31,7 @@ const signUp = async () => {
       }
     }
   })
+  // создаем запись в таблице с users
   if (userSignUp && userSignUp.user) {
     const {data: userAddTableUsers, error: userAddTableUsersError} = await supabase
       .from('users')
@@ -43,16 +47,17 @@ const signUp = async () => {
   if (userSignUpError) {
     errorMsg.value = userSignUpError.message
   } else { 
+    user.value = userSignUp.user;
     successMsg.value = 'Регистрация успешна!'
-    reloadNuxtApp();
-    navigateTo('/me');
   }
   loading.value = false
 }
 </script>
 
 <template>
-  <div class="flex items-center justify-center px-4 sm:px-6 lg:px-8">
+  <div 
+    v-if="!user"
+    class="flex items-center justify-center px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
       <div>
         <h2 class="mt-6 text-center text-3xl font-extrabold text-green-200/85">
@@ -108,5 +113,13 @@ const signUp = async () => {
       <p v-if="errorMsg" class="mt-2 text-center text-sm text-red-600">{{ errorMsg }}</p>
       <p v-if="successMsg" class="mt-2 text-center text-sm text-green-600">{{ successMsg }}</p>
     </div>
+  </div>
+
+  <div v-if="user">
+    <NuxtLink to="/me">
+      <BaseButton>
+        Профиль
+      </BaseButton>
+    </NuxtLink>
   </div>
 </template>

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+
+definePageMeta({
+	middleware: 'check-auth'
+})
+
 import type { Database } from '~/types/database.types';
 
 
@@ -11,7 +16,9 @@ const message = ref<{type: string, text: string}>();
 </script>
 
 <template>
-	<Body class="max-md:px-10 bg-gray-900/95 max-w-5xl overflow-y-auto justify-self-center text-green-200">
+	<!-- max-md:w-85 w-120 bg-gray-900/95 max-w-5xl overflow-y-auto justify-self-center text-green-200 -->
+	<Body class="bg-gray-900/95 text-green-200 justify-center flex">
+		
 		<header className="flex justify-between w-full mt-5 pr-4 shadow-xl rounded-sm shadow-green-200/20">
 			<div className="self-center relative">
 				<NuxtLink class="inline-flex" to="/">
@@ -25,6 +32,12 @@ const message = ref<{type: string, text: string}>();
 							Home
 						</NuxtLink>
 					</li>
+
+					<li className="self-center">
+						<NuxtLink class="btn_header flex gap-1" to="/about">
+							About
+						</NuxtLink>
+					</li>
 					<li className="self-center">
 						<NuxtLink class="btn_header flex gap-1" to="/me">
 							Me
@@ -35,7 +48,7 @@ const message = ref<{type: string, text: string}>();
 			</div>
 		</header>
 	
-		<main className="my-15">
+		<main className="my-15 max-w-xl max-md:w-85">
 			<slot />
 		</main>
 		

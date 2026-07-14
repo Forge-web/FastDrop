@@ -31,11 +31,18 @@ const props = defineProps({
 
 
 <div
-	class="flex flex-col rounded-xl shadow-xl p-5"
+	class="flex flex-col rounded-xl shadow-xl p-5 max-w-100"
 >
-	<div><span class="text-gray-400/80">Name:</span> <span class="">{{ props.name }}</span></div>
-	<div><span class="text-gray-400/80">Size:</span> <span class="">{{ formatFileSize(props.size) }}</span></div>
-	<div><span class="text-gray-400/80">Type:</span> <span class="">{{ props.mime_type }}</span></div>
+	<div>
+		<span class="text-gray-400/80">Name:</span>&nbsp;
+		<span class="">{{ props.name }}</span></div>
+	<div>
+		<span class="text-gray-400/80">Size:</span>&nbsp;
+		<span class="">{{ formatFileSize(props.size) }}</span></div>
+	<div class="">
+		<span class="text-gray-400/80">Type:</span>&nbsp;
+		<span class="text-wrap max-w-10">{{ props.mime_type }}</span>
+	</div>
 
 
 	<div class="flex flex-col gap-2">

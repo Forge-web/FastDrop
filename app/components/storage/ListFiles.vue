@@ -14,7 +14,7 @@ const supabase = useSupabaseClient<Database>();
 
 //user
 const user = useSupabaseUser();
-const userPayload = user.value as JwtPayload;
+// const userPayload = user.value as JwtPayload;
 
 
 //storage

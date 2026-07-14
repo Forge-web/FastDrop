@@ -30,8 +30,9 @@ const signOut = async () => {
 	const { error } = await supabase.auth.signOut();
 	if (error) {
 		message.value = {type: 'error', text: error.message};
+		return;
 	}
-	reloadNuxtApp();
+	
 }
 
 const changeStatePage = (toChangeState: string) => {

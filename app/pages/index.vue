@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import CardUser from '~/components/CardUser.vue';
 
 const client = useSupabaseClient();
@@ -41,6 +42,15 @@ let search_result = ref();
 				search
 			</button>
 		</form>
+	</div>
+	<div v-if="!search_result" class="self-center">
+		<NuxtLink to="rules" class="text-green-200/80">
+			Правила
+		</NuxtLink>
+		<div class="text-red-200/70">
+			Ваши файлы видны всем!
+			В данный момент функция приватных файлов в разработке
+		</div>
 	</div>
 	<div v-if="search_result">
 		<div v-for="_user in search_result" 

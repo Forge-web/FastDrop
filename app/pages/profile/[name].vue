@@ -45,7 +45,7 @@ onMounted(async () => {
 
 <template>
 
-	<div class="flex flex-col justify-center gap-10 max-md:px-10">
+	<div class="flex flex-col justify-center gap-10">
 
 		<div class="text-xl w-full">
 			Профиль: <span> {{ userName }} </span>

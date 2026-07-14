@@ -9,11 +9,9 @@ const password = ref('')
 const errorMsg = ref('')
 const loading = ref(false)
 
-const {data: {user}} = await supabase.auth.getUser();
 
-if (user) {
-  navigateTo('/me');
-}
+
+// const {data: {user}} = await supabase.auth.getUser();
 
 const signIn = async () => {
   loading.value = true
@@ -48,10 +46,6 @@ const signIn = async () => {
               required placeholder="Email"
               
             />
-            
-            <!-- <input v-model="email" id="email-address" name="email" type="email" autocomplete="email" required
-                   class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                   placeholder="Email"> -->
           </div>
           <div>
             <label for="password" class="sr-only">Пароль</label>
@@ -60,9 +54,6 @@ const signIn = async () => {
               autocomplete="current-password" required
               placeholder="Password"
             />
-            <!-- <input v-model="password" id="password" name="password" type="password" autocomplete="current-password" required
-                   class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                   placeholder="Пароль"> -->
           </div>
         </div>
         <div>

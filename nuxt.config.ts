@@ -23,7 +23,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/image', 
     '@nuxtjs/supabase', 
-    'nuxt-auth-utils'
+    'nuxt-auth-utils',
+    '@nuxt/content',
   ],
 
   supabase: {
