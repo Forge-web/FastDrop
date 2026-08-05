@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BaseButton from '~/components/BaseButton.vue';
 
+
 const { data: rules } = await useAsyncData(() => {
 	return queryCollection('content').where('description', '=' ,'rulse').order('id', 'DESC').all()
 })

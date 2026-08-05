@@ -4,14 +4,16 @@ definePageMeta({
 	middleware: 'check-auth'
 })
 
-import type { Database } from '~/types/database.types';
+const appConfig = useAppConfig();
 
+const user = useSupabaseUser();
+const user_name = ref('');
 
-const supabase = useSupabaseClient<Database>();
-const {data: {user}} = await supabase.auth.getUser();
-
-const message = ref<{type: string, text: string}>();
-
+if (user.value?.user_metadata){
+	user_name.value = user.value?.user_metadata.first_name;
+} else {
+	user_name.value = 'anonymous'
+}
 
 </script>
 
@@ -28,20 +30,19 @@ const message = ref<{type: string, text: string}>();
 			<div className="self-center">
 				<ul className="flex max-w-md gap-10">
 					<li className="self-center">
-						<NuxtLink class="btn_header" to="/" >
+						<NuxtLink class="btn_header" to="/" :hidden="!appConfig.navbar.home">
 							Home
 						</NuxtLink>
 					</li>
-
-					<li className="self-center">
+					<li className="self-center" :hidden="!appConfig.navbar.about">
 						<NuxtLink class="btn_header flex gap-1" to="/about">
 							About
 						</NuxtLink>
 					</li>
-					<li className="self-center">
+					<li className="self-center" :hidden="!appConfig.navbar.me">
 						<NuxtLink class="btn_header flex gap-1" to="/me">
 							Me
-							<span v-if="user">({{ user.user_metadata.first_name }})</span>
+							<span v-if="user">({{ user_name }})</span>
 						</NuxtLink>
 					</li>
 				</ul>

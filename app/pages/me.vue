@@ -20,14 +20,15 @@ const states = {
 };
 
 
-const limitStorage = ref<UserLimit>(await getLimitStorageUser() as UserLimit);
-const currentFilesSize = ref(limitStorage.value.use_of_limit as number);
+const limitStorage = ref<UserLimit>();
+const currentFilesSize = ref();
 
 const currentState = ref(states.uploadFiles);
 
 
 const signOut = async () => {
 	const { error } = await supabase.auth.signOut();
+	await reloadNuxtApp();
 	if (error) {
 		message.value = {type: 'error', text: error.message};
 		return;
@@ -43,6 +44,11 @@ const changeStatePage = (toChangeState: string) => {
 		currentState.value = toChangeState;
 	}
 }
+
+onMounted(async () => {
+	limitStorage.value = await getLimitStorageUser() as UserLimit;
+	currentFilesSize.value = limitStorage.value.use_of_limit as number
+});
 
 </script>
 
