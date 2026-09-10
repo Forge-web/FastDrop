@@ -1,6 +1,9 @@
 import type { Database } from "~/types/database.types";
-export default defineNuxtRouteMiddleware(async (to, from) => {
+
+export default defineNuxtPlugin(async () => {
 	const supabase = useSupabaseClient<Database>();
 	const {data: {user}} = await supabase.auth.getUser();
-	return;
+	return {
+		provide: {user}
+	}
 })

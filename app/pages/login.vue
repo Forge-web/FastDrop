@@ -77,7 +77,7 @@ const signIn = async () => {
         </div>
       </div>
 
-      <div v-else>
+      <div v-else class="flex justify-center">
         <Navigate 
           navigate-to-url="/me"
           text-button="Профиль"

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 import BaseButton from '~/components/BaseButton.vue'
 import BaseInput from '~/components/BaseInput.vue'
 

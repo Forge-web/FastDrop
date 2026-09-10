@@ -75,7 +75,7 @@ const uploadToStorage = async (file: bucketFiles[0]) => {
     
         // Обновляем список
       } catch (err: any) {
-        message.value = { type: 'error', text: err.message + " " + err }
+        message.value = { type: 'error', text: 'при загрузке, что-то пошло не так' }
         file.status = StatusUploadFile.error;
       } finally {
         uploadingFile.value = false

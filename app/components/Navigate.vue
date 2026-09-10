@@ -20,5 +20,4 @@ const {navigateToUrl = '/', textButton = 'Перейти'} = defineProps<{
 			</BaseButton>
 		</NuxtLink>
 	</div>
-
 </template>
