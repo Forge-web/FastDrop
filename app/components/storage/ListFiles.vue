@@ -85,7 +85,7 @@ onMounted(async () => {
 	<div class="max-md:px-2 pt-2 pb-10 flex flex-col max-w-full gap-5 justify-center rounded-xl">
 		<div class="text-xl ">Фаши файлы</div>
 		
-		<div v-for="file, index in userFiles" :key="file.id"
+		<div v-if="userFiles.length" v-for="file, index in userFiles" :key="file.id"
 			class="w-full flex flex-col self-center px-5 py-2 rounded-xl shadow-lg shadow-green-200/20"
 		>
 		
@@ -117,6 +117,10 @@ onMounted(async () => {
 				</div>
 			</div>
 			
+		</div>
+
+		<div v-else class="flex justify-center text-center bg-gray-600/20 p-5 rounded-xl text-green-200/95">
+			Пусто
 		</div>
 	</div>
 </div>

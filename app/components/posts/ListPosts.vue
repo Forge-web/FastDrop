@@ -2,6 +2,7 @@
 import type { Database, Tables } from '~/types/database.types.js';
 import AddPost from './AddPost.vue';
 import ActionsPost from './ActionsPost.vue';
+import CopyButton from './CopyButton.vue'
 
 
 const {errorToast, successToast} = useToast();
@@ -16,7 +17,7 @@ async function getPosts() {
 		.select()
 		.eq('user_id', getUser()?.user_metadata.sub as string);
 	
-	if (data) posts.value = data;
+	if (data) posts.value = data.reverse();
 }	
 
 function addStateMenu(item_id: string){
@@ -25,16 +26,6 @@ function addStateMenu(item_id: string){
 	} else {
 		stateActionsMenu.value = item_id;
 	}
-}
-
-async function copyText(text: string){
-	try {
-		await navigator.clipboard.writeText(text)
-		successToast('Успешно скопировано!');
-	} catch {
-		errorToast('Ошибка копирования');
-	}
-
 }
 
 await getPosts();
@@ -71,11 +62,7 @@ onMounted(async () => {
 						</div>
 					</div>
 					
-					<BaseButton
-						@click="copyText(post.body as string)" 
-						class="w-max h-max z-50 text-sm p-3 rounded-xl bg-gray-600/20">
-						Copy
-					</BaseButton>
+					<CopyButton :text="post.body"/>
 				</div>
 
 				<div v-if="stateActionsMenu === post.post_id" class="z-0">

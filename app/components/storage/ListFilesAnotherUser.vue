@@ -31,7 +31,7 @@ const props = defineProps({
 
 
 <div
-	class="flex flex-col rounded-xl shadow-xl p-5 max-w-100"
+	class="flex flex-col rounded-xl shadow-xl shadow-gray-200/5 p-5 max-w-100"
 >
 	<div>
 		<span class="text-gray-400/80">Name:</span>&nbsp;

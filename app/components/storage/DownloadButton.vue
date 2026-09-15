@@ -19,6 +19,8 @@ const props = defineProps({
   }
 })
 
+const {errorToast, successToast} = useToast();
+
 const isLoading = ref(false);
 const error = ref('');
 const supabase = useSupabaseClient();
@@ -27,7 +29,6 @@ const downloadFile = async () => {
   if (!props.storage_path) return
 
   isLoading.value = true
-  error.value = ''
   try {
     const { data } = await supabase.storage
 		.from('user-files')
@@ -39,9 +40,11 @@ const downloadFile = async () => {
   link.click();
 	document.body.removeChild(link);
 
+  successToast("Загрузка началась");
+
   } catch (err) {
-    console.error('Download error:', err)
-    error.value = err.message || 'Не удалось скачать файл. Попробуйте позже.'
+    // console.error('Download error:', err)
+    errorToast('Не удалось скачать файл. Попробуйте позже.');
   } finally {
     isLoading.value = false
   }
