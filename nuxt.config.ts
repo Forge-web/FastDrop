@@ -9,8 +9,12 @@ export default defineNuxtConfig({
   css:['./app/assets/css/main.css'],
 
   runtimeConfig: {
+	wsAllowedOrigins: process.env.WS_ALLOWED_ORIGINS 
+    	? process.env.WS_ALLOWED_ORIGINS.split(',') 
+    	: ['http://localhost:3000'],
     public:{
-      baseUrl: "http://localhost:3000"
+		baseUrl: "http://localhost:3000",
+		
     }
   },
 
@@ -20,10 +24,16 @@ export default defineNuxtConfig({
     ]
   },
 
+  nitro: {
+	experimental: {
+		websocket: true,
+	}
+  },
+
   modules: [
     '@nuxt/image', 
     '@nuxtjs/supabase', 
-    'nuxt-auth-utils',
+    'nuxt-auth-utils'
   ],
 
   plugins: [
@@ -45,5 +55,6 @@ export default defineNuxtConfig({
       }
     }
   },
-  ssr: false
+  ssr: false,
+
 })

@@ -3,6 +3,7 @@ import BaseButton from '~/components/BaseButton.vue';
 import ListPosts from '~/components/posts/ListPosts.vue';
 import ListFiles from '~/components/storage/ListFiles.vue';
 import UploadFiles from '~/components/storage/UploadFiles.vue';
+import p2p from './storage/p2p.vue';
 import type { Database } from '~/types/database.types';
 import type { UserLimit } from '~/types/getLimitStorageUser.types';
 
@@ -17,7 +18,8 @@ const message = ref<{type: string, text: string}>();
 const states = {
 	listFalse: 'listFalse',
 	uploadFiles: 'uploadFiles',
-	posts: 'posts'
+	posts: 'posts',
+	p2p: 'p2p'
 };
 
 
@@ -83,7 +85,7 @@ onMounted(async () => {
 				Удалить все файлы
 			</BaseButton>
 		</div>
-		<div class="flex gap-5" :class="menuState ? '' : 'hidden'">
+		<div class="flex flex-col gap-5 px-5 py-5 rounded-xl" :class="menuState ? '' : 'hidden'">
 			<BaseButton 
 				@click="changeStatePage(states.listFalse)" 
 				:variant="currentState==states.listFalse ? 'selected': 'primary'"
@@ -102,6 +104,12 @@ onMounted(async () => {
 			>
 				Posts
 			</BaseButton>
+			<BaseButton
+				@click="changeStatePage(states.p2p)"
+				:variant="currentState==states.p2p ? 'selected' : 'primary'"
+			>
+				P2P
+			</BaseButton>
 		</div>
 		<!-- <div :class="menuState ? '' : 'hidden'">
 			<div v-if="typeof(limitStorage) == 'object' && typeof(limitStorage.limit) == 'number'" 
@@ -116,19 +124,24 @@ onMounted(async () => {
 			</div>
 		</div> -->
 		
-
-		<ListFiles v-if="currentState==states.listFalse" />
-		<UploadFiles v-if="currentState==states.uploadFiles" />
-		<div v-if="currentState==states.posts">
-			<Suspense>
-				<template #default>
-					<ListPosts />
-				</template>
-				<template #fallback>
-					<div>Loading...</div>
-				</template>
-			</Suspense>
+		<div :class="menuState ? 'hidden' : ''">
+			<ListFiles v-if="currentState==states.listFalse" />
+			<UploadFiles v-if="currentState==states.uploadFiles" />
+			
+			<p2p v-if="currentState==states.p2p" />
+	
+			<div v-if="currentState==states.posts">
+				<Suspense>
+					<template #default>
+						<ListPosts />
+					</template>
+					<template #fallback>
+						<div>Loading...</div>
+					</template>
+				</Suspense>
+			</div>
 		</div>
+
 	</div>
 
 </div>

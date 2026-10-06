@@ -24,7 +24,6 @@ const getOwnerID = async () => {
 
 
 const owner_id = await getOwnerID() as string;
-console.log(owner_id)
 const publicFiles = ref();
 const stateMenu = ref<'files' | 'posts' | ''>('');
 

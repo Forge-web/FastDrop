@@ -41,7 +41,7 @@ const uploadToStorage = async (file: bucketFiles[0]) => {
         // Создаём путь: user-files/{user_id}/{timestamp}_{original_name}
         const timestamp = Date.now()
         // const safeName = file.body.name.replace(/[^a-zA-Z0-9.-]/g, '')
-        const safeName = file.body.name;
+        const safeName = translit(file.body.name);
         const filePath = `${user.value.sub}/${timestamp}_${safeName}`
     
         // Загружаем в Storage

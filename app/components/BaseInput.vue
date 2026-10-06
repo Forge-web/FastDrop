@@ -107,7 +107,7 @@ const variantClasses: Record<NonNullable<Props['variant']>, string> = {
 
 // Базовые классы + динамические
 const inputClasses = computed(() => {
-  const base = 'w-full rounded-xl shadow-sm transition-all duration-200 focus:shadow-xl outline-none disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60 read-only:bg-gray-50';
+  const base = 'w-full rounded-xl border border-green-200/10 shadow-none transition-all duration-200 focus:shadow-xl outline-none disabled:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-60 read-only:bg-gray-50';
   
   const errorClass = props.error
     ? 'border-red-500 focus:border-red-500 focus:ring-red-500'

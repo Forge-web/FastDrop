@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  variant?: 'primary' | 'selected' | 'danger';
+  variant?: 'primary' | 'selected' | 'danger' | 'disabled';
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
@@ -15,9 +15,10 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Tailwind классы для каждого варианта и размера
 const variantClasses: Record<NonNullable<Props['variant']>, string> = {
-  primary: 'text-green-200 shadow-lg shadow-green-200/25 rounded-xl hover:shadow-green-200/50',
-  selected: 'text-green-200 shadow-lg shadow-green-200/60 rounded-xl',
+  primary: 'text-green-200 shadow-lg shadow-gray-200/15 rounded-xl hover:shadow-green-200/50',
+  selected: 'text-green-200 shadow-lg shadow-green-200/20 rounded-xl',
   danger: 'text-red-400 shadow-lg shadow-red-300/25 rounded-xl hover:shadow-red-400/50',
+  disabled: 'text-green-200/20 shadow-lg shadow-green-200/10 rounded-xl hover:shadow-green-200/20'
 };
 
 const sizeClasses: Record<NonNullable<Props['size']>, string> = {
