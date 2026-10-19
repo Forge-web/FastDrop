@@ -55,12 +55,12 @@ async function addPost() {
 	
 		<div class="flex flex-col gap-5 rounded-lg shadow-lg max-w-md w-full mx-4 p-6 transform transition-all">
 
-			<BaseButton 
+			<Button 
 				@click="cancelPostModal"
 				class="w-max"
 			>
 				Cancel
-			</BaseButton>
+			</Button>
 
 			<div>
 				<label for="user-text" class="text-lg">Text</label>

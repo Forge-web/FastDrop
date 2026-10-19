@@ -24,9 +24,10 @@ async function copyText(){
 </script>
 
 <template>
-	<BaseButton
+	<div
 		@click="copyText()" 
-		class="shadow-lg shadow-green-400/10 w-max h-max z-50 text-sm p-3 rounded-xl">
-		Copy
-	</BaseButton>
+		class="z-999 text-gray-400 hover:text-green-700"
+	>
+		<Icon name="solar:copy-broken" size="18"/>
+	</div>
 </template>

@@ -13,12 +13,21 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'button',
 });
 
-// Tailwind классы для каждого варианта и размера
+// Tailwind классы для каждого варианта
 const variantClasses: Record<NonNullable<Props['variant']>, string> = {
-  primary: 'text-green-200 shadow-lg shadow-gray-200/15 rounded-xl hover:shadow-green-200/50',
-  selected: 'text-green-200 shadow-lg shadow-green-200/20 rounded-xl',
-  danger: 'text-red-400 shadow-lg shadow-red-300/25 rounded-xl hover:shadow-red-400/50',
-  disabled: 'text-green-200/20 shadow-lg shadow-green-200/10 rounded-xl hover:shadow-green-200/20'
+  primary:
+    'text-green-300 bg-gray-800/60 border border-gray-700/60 shadow-md shadow-green-500/5 ' +
+    'hover:text-green-200 hover:border-green-400/40 hover:bg-gray-800/80 hover:shadow-lg hover:shadow-green-500/15 ' +
+    'active:bg-gray-800',
+  selected:
+    'text-green-200 bg-green-500/10 border border-green-400/40 shadow-md shadow-green-500/10 ' +
+    'hover:bg-green-500/15 hover:border-green-400/60 hover:shadow-lg hover:shadow-green-500/20',
+  danger:
+    'text-red-300 bg-red-500/5 border border-red-500/30 shadow-md shadow-red-500/5 ' +
+    'hover:text-red-200 hover:bg-red-500/10 hover:border-red-400/50 hover:shadow-lg hover:shadow-red-500/20 ' +
+    'active:bg-red-500/15',
+  disabled:
+    'text-gray-500/70 bg-gray-800/30 border border-gray-700/40 shadow-sm',
 };
 
 const sizeClasses: Record<NonNullable<Props['size']>, string> = {
@@ -28,14 +37,20 @@ const sizeClasses: Record<NonNullable<Props['size']>, string> = {
 };
 
 const buttonClasses = computed(() => {
-  const baseClasses = 'p-5 w-full cursor-pointer inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-gray-400/40';
-  
+  const baseClasses =
+    'w-full cursor-pointer inline-flex items-center justify-center gap-2 font-medium rounded-xl ' +
+    'transition-all duration-200 outline-none ' +
+    'focus-visible:ring-2 focus-visible:ring-green-400/50 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900 ' +
+    'active:scale-[0.98] ' +
+    'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none disabled:active:scale-100 disabled:shadow-none';
+
   return [
     baseClasses,
     variantClasses[props.variant],
     sizeClasses[props.size],
-    props.disabled && 'pointer-events-none'
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 });
 </script>
 

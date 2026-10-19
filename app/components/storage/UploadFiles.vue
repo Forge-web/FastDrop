@@ -4,18 +4,18 @@ import DragDropFile from './DragDropFile.vue';
 import type { UserLimit } from '~/types/getLimitStorageUser.types.js';
 
 type BodyFile = {
-  lastModified: number,
-  lastModifiedDate: any,
-  name: string,
-  size: number,
-  type: string,
-  webkitRelativePath: string,
+	lastModified: number,
+	lastModifiedDate: any,
+	name: string,
+	size: number,
+	type: string,
+	webkitRelativePath: string,
 }
 
 enum StatusUploadFile {
-  uploading = 'Загрузка...',
-  done = 'Успешно',
-  error = 'Ошибка',
+	uploading = 'Загрузка...',
+	done = 'Успешно',
+	error = 'Ошибка',
 }
 
 type bucketFiles = {
@@ -47,7 +47,7 @@ const uploadToStorage = async (file: bucketFiles[0]) => {
         // Загружаем в Storage
         const { data, error: uploadError } = await supabase.storage
           .from('user-files')
-          .upload(filePath, file.body, {
+          .upload(filePath, file.body as any, {
             cacheControl: '3600',
             upsert: false
           })

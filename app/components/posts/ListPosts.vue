@@ -38,25 +38,35 @@ onMounted(async () => {
 
 <template>
 
-	<div class="flex flex-col gap-5 justify-center rounded-xl w-full">
-		<div class="text-xl">POSTS</div>		
+	<div class="flex flex-col gap-6 justify-center rounded-xl w-full">
+		<h2 class="text-2xl font-bold tracking-tight text-gray-100">POSTS</h2>		
 		
 		<div class="w-max">
 			<AddPost @refresh-posts="getPosts"/>
 		</div>
 
-		<div class="w-full flex flex-col gap-3 ">
-			<div v-if="posts?.length" v-for="post in posts"
-				class="z-0 flex flex-col gap-5 p-3 bg-gray-900/20 rounded-xl cursor-pointer hover:shadow-lg hover:shadow-green-200/20"
+		<div class="w-full flex flex-col gap-3">
+			<div 
+				v-if="posts?.length" 
+				v-for="post in posts"
+				:key="post.post_id"
+				class="group relative z-0 flex flex-col gap-4 p-4 bg-gray-800/40 backdrop-blur-sm border border-gray-700/50 rounded-xl cursor-pointer transition-all duration-200 hover:bg-gray-800/60 hover:border-green-400/30 hover:shadow-lg hover:shadow-green-500/10"
 			>
-				<div class="flex justify-between">
+				<div class="flex justify-between items-start gap-3">
 					<div class="flex w-full" @click="addStateMenu(post.post_id)">
 						<div class="w-full break-words flex flex-col gap-2">
-							<div>
-								public: 
-								<span :class="post.public ? 'text-green-500/50':'text-red-500/50'">{{ post.public }}</span>
+							<div class="flex items-center gap-2 text-sm">
+								<span class="text-gray-400">public:</span>
+								<span 
+									:class="post.public 
+										? 'bg-green-500/15 text-green-400 border-green-500/30' 
+										: 'bg-red-500/15 text-red-400 border-red-500/30'"
+									class="px-2 py-0.5 text-xs font-semibold rounded-full border"
+								>
+									{{ post.public }}
+								</span>
 							</div>
-							<div class="max-w-80">
+							<div class="max-w-80 text-gray-200 leading-relaxed">
 								{{ post.body }}
 							</div>
 						</div>
@@ -65,12 +75,12 @@ onMounted(async () => {
 					<CopyButton :text="post.body"/>
 				</div>
 
-				<div v-if="stateActionsMenu === post.post_id" class="z-0">
+				<div v-if="stateActionsMenu === post.post_id" class="z-0 pt-3 border-t border-gray-700/50">
 					<ActionsPost @refresh-posts-actions="getPosts" :post_id="post.post_id"/>
 				</div>
 			</div>
 
-			<div v-else class="flex justify-center text-center bg-gray-600/20 p-5 rounded-xl">
+			<div v-else class="flex justify-center text-center bg-gray-800/30 border border-dashed border-gray-700/50 p-8 rounded-xl text-gray-400">
 				У вас пока нет постов
 			</div>
 		</div>

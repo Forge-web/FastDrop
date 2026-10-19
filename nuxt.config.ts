@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
   debug: false,
-  css:['./app/assets/css/main.css'],
+  css:['~/assets/css/main.css'],
 
   runtimeConfig: {
 	wsAllowedOrigins: process.env.WS_ALLOWED_ORIGINS 
@@ -33,7 +33,8 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/image', 
     '@nuxtjs/supabase', 
-    'nuxt-auth-utils'
+    'nuxt-auth-utils',
+    '@nuxt/icon/module'
   ],
 
   plugins: [

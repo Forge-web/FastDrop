@@ -8,5 +8,8 @@ export default defineAppConfig({
 		navigateToPage: '/',
 		pages: ['rules', 'updates']
 	},
-
+	icon: {
+		mode: 'css',
+		cssLayer: 'base'
+	}
 })
