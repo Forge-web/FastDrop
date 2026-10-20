@@ -7,13 +7,16 @@ const props = defineProps<{
 		to: string,
 		icon?: string,
 		size?: string,
-		active?: boolean
+		active?: boolean,
+		authNeed: boolean
 	}[],
 	logoutFunc: any,
 }>();
 
 const isCollapsed = ref(false);
 const isMobileOpen = ref(false);
+
+const user = useSupabaseUser();
 
 // — состояние сворачивания переживает перезагрузку
 onMounted(() => {
@@ -121,43 +124,49 @@ const icons: Record<string, string> = {
 
 		<!-- Навигация -->
 		<nav class="flex-1 flex flex-col gap-1 p-3 overflow-y-auto">
-			<NuxtLink
-				v-for="item in props.navItems"
-				:key="item.to"
-				:to="item.to"
-				:title="isCollapsed ? item.label : undefined"
-				:class="[
-					'group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200',
-					item.active
-					? 'bg-green-500/15 text-green-200 border-green-400/25 shadow-lg shadow-green-400/10'
-					: 'text-gray-400 border-transparent hover:text-gray-100 hover:bg-gray-800/60 hover:border-gray-700/60',
-					isCollapsed ? 'md:justify-center md:gap-0' : '',
-				]"
-			>
-				<!-- Индикатор активного пункта -->
-				<span
-					v-if="item.active"
-					class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-green-400"
-				/>
-				
-				<Icon :name="item.icon!" :size="item.size ? item.size : '14'"  />
-				
-				<span
+			<div v-for="item in props.navItems">
+				<NuxtLink
+					v-if="!item.authNeed || user"
+					:key="item.to"
+					:to="item.to"
+					:title="isCollapsed ? item.label : undefined"
 					:class="[
-					'whitespace-nowrap overflow-hidden transition-all duration-300',
-					isCollapsed ? 'md:max-w-0 md:opacity-0' : 'md:max-w-[200px] md:opacity-100',
+						'group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200',
+						item.active
+						? 'bg-green-500/15 text-green-200 border-green-400/25 shadow-lg shadow-green-400/10'
+						: 'text-gray-400 border-transparent hover:text-gray-100 hover:bg-gray-800/60 hover:border-gray-700/60',
+						isCollapsed ? 'md:justify-center md:gap-0' : '',
 					]"
 				>
-					{{ item.label }}
-				</span>
-			</NuxtLink>
+			
+					<!-- Индикатор активного пункта -->
+					<span
+						v-if="item.active"
+						class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-green-400"
+					/>
+					
+					<Icon :name="item.icon!" :size="item.size ? item.size : '14'"  />
+					
+					<span
+						:class="[
+						'whitespace-nowrap overflow-hidden transition-all duration-300',
+						isCollapsed ? 'md:max-w-0 md:opacity-0' : 'md:max-w-[200px] md:opacity-100',
+						]"
+					>
+						{{ item.label }}
+					</span>
+			
+				</NuxtLink>
+			</div>
 		</nav>
 
 		<!-- Свернуть (десктоп) -->
 		
 
 		<!-- Пользователь -->
-		<div class="p-3 border-t border-gray-800/60">
+		<div class="p-3 border-t border-gray-800/60"
+			v-if="user"
+		>
 
 
 			<button

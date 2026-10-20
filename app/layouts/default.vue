@@ -17,24 +17,28 @@ const items = computed(() => [
 		to: '/',
 		icon: 'grommet-icons:home-rounded',
 		active: route.matched.some(r => r.path === '/'),
+		authNeed: false
 	},
 	{
 		label: 'Профиль',
 		to: '/me',
 		icon: 'grommet-icons:user',
 		active: route.matched.some(r => r.path.startsWith('/me')),
+		authNeed: false
 	},
 	{
 		label: 'Список файлов',
 		to: '/storage/filelist',
 		icon: 'grommet-icons:folder',
 		active: route.matched.some(r => r.path.startsWith('/storage/filelist')),
+		authNeed: true
 	},
 	{
 		label: 'Загрузить файлы',
 		to: '/storage/fileupload',
 		icon: 'grommet-icons:cloud-upload',
 		active: route.matched.some(r => r.path.startsWith('/storage/fileupload')),
+		authNeed: true
 	},
 	{
 		label: 'Посты',
@@ -42,6 +46,7 @@ const items = computed(() => [
 		icon: 'ph:newspaper-light',
 		size: '18',
 		active: route.matched.some(r => r.path.startsWith('/posts')),
+		authNeed: true
 	},
 
 ]);
@@ -63,38 +68,15 @@ const handleLogout = async () => {
 	<!-- max-md:w-85 w-120 bg-gray-900/95 max-w-5xl overflow-y-auto justify-self-center text-green-200 -->
 	<Body class="bg-gray-900/95 text-green-200">
 		
-		<div class="flex min-h-screen mx-auto max-w-7xl">
+		<div class="flex min-h-screen w-screen">
 			<Sidebar :nav-items="items" :logout-func="handleLogout" />
-			<!-- <header class="flex py-5 px-5 border-b border-green-200/80">
-				<div class="md:ml-5 self-center relative">
-					<NuxtLink class="inline-flex" to="/">
-						
-						<div class="px-5 text-lg">FastDrop</div>
-					</NuxtLink>
-				</div>
-				<div class="flex w-full justify-center">
-					<div className="self-center relative">
-						<ul className="flex max-w-md gap-10">
-							
-							<HeaderNav :items="items" />
-					
-						</ul>
-					</div>
-				</div>
-				<div class="flex self-end max-md:hidden">
-					<NuxtLink to="https://github.com/Forge-web/FastDrop"
-						class="w-full justify-center"
-					>
-						<Icon name="grommet-icons:github" size="20" class="self-center" />
-					</NuxtLink>
-				</div>
-			</header> -->
-		
 			
-			<main class="flex-1 max-md-p-6 pt-25 min-w-0 justify-center min-w-150 max-md:w-full max-md:px-5 max-md:min-w-auto md:px-45">
+			<main class="flex-1 flex max-md-p-6 pt-25 min-w-0 justify-center min-w-150 max-md:w-full max-md:px-5 max-md:min-w-auto md:px-45">
 				<ToastContainer />
 				
-				<slot />
+				<div class="flex flex-col max-w-5xl md:min-w-xl">
+					<slot />
+				</div>
 				
 			</main>
 

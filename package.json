@@ -10,24 +10,22 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@nuxt/icon": "^2.5.1",
-    "@nuxt/image": "^2.0.0",
-    "@supabase/server": "^1.8.0",
-    "@supabase/supabase-js": "^2.115.0",
+	"@nuxtjs/supabase": "^2.1.0",
+	"@nuxt/icon": "^2.5.1",
+    "@nuxt/image": "^2.1.0",
+    "@supabase/server": "^1.9.2",
+    "@supabase/supabase-js": "^2.118.0",
     "@tailwindcss/typography": "^0.5.20",
-    "@tailwindcss/vite": "^4.3.0",
-    "@types/node": "^25.9.1",
-    "argon2": "^0.43.1",
-    "better-sqlite3": "^12.11.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^26.6.5",
+    "argon2": "^0.45.1",
+    "better-sqlite3": "^13.0.3",
     "date-fns": "^4.4.0",
-    "nuxt": "^4.4.6",
-    "nuxt-auth-utils": "^0.5.29",
-    "supabase": "^2.111.0",
-    "tailwindcss": "^4.3.0",
-    "vue": "^3.5.34",
-    "vue-router": "^5.0.7"
-  },
-  "devDependencies": {
-    "@nuxtjs/supabase": "^2.0.10"
+    "nuxt": "^4.6.2",
+    "nuxt-auth-utils": "^0.5.32",
+    "supabase": "^2.121.0",
+    "tailwindcss": "^4.3.3",
+    "vue": "^3.5.44",
+    "vue-router": "^5.4.0"
   }
 }

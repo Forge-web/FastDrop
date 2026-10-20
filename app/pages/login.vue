@@ -21,10 +21,13 @@ const signIn = async () => {
     email: email.value,
     password: password.value,
   })
+
   if (error) errorMsg.value = error.message
+
   else {
-    await reloadNuxtApp();
+	navigateTo('/')
   }
+  
   loading.value = false
 }
 </script>
@@ -76,14 +79,6 @@ const signIn = async () => {
           </p>
         </div>
       </div>
-
-      <div v-else class="flex justify-center">
-        <Navigate 
-          navigate-to-url="/me"
-          text-button="Профиль"
-        />
-      </div>
-
     </div>
   </div>
 </template>

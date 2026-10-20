@@ -1,5 +1,9 @@
 <script setup lang="ts">
 
+definePageMeta({
+	keepalive: true
+})
+
 import CardUser from '~/components/CardUser.vue';
 
 const client = useSupabaseClient();
@@ -29,18 +33,18 @@ let search_result = ref();
 		<form @submit.prevent="search_user_result"
 			class="flex gap-5 w-full"
 		>
-			<input 
+			<UiInput
 				v-model="search_user_name"
-				class="text-green-200/70 text-warp py-2 px-5 w-full rounded-sm shadow-lg shadow-green-200/25 focus:outline-hidden focus:shadow-green-200/50 focus:border-0 focus:bg-gray-700/50" 
 				placeholder="search" 
-				type="text" 
+				type="text"
+				@clear-input="search_user_name = ''"
 			/>
-			<button 
-				class="p-5 text-green-200/70 hover:text-green-200 shadow-lg shadow-green-200/25 rounded-xl hover:shadow-green-200/50 cursor-pointer"
+			<BaseButton 
+				class="w-max text-green-200/70 hover:text-green-200 shadow-lg shadow-green-200/25 rounded-xl hover:shadow-green-200/50 cursor-pointer"
 				type="submit"
 			>
-				search
-			</button>
+				<Icon name="solar:minimalistic-magnifer-linear" />
+			</BaseButton>
 		</form>
 	</div>
 	<div v-if="!search_result" class="self-center">
@@ -52,11 +56,11 @@ let search_result = ref();
 			В данный момент функция приватных файлов в разработке
 		</div>
 	</div>
-	<div v-if="search_result">
+	<div v-if="search_result" class="w-full">
 		<div v-for="_user in search_result" 
-			class=""
+			class="w-full flex flex-col items-center"
 		>
-			<NuxtLink :to="{name: 'profile-name', params:{name: _user.name}}">
+			<NuxtLink class="w-full" :to="{name: 'profile-name', params:{name: _user.name}}">
 				<CardUser
 					:name="_user.name"
 				/>
