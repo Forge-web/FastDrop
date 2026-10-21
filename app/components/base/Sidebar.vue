@@ -157,6 +157,42 @@ const icons: Record<string, string> = {
 					</span>
 			
 				</NuxtLink>
+				<div v-else :class="[
+						'group relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium border transition-all duration-200',
+						item.active
+						? 'bg-green-500/15 text-green-200 border-green-400/25 shadow-lg shadow-green-400/10'
+						: 'text-gray-400 border-transparent hover:text-gray-100 hover:bg-gray-800/60 hover:border-gray-700/60',
+						isCollapsed ? 'md:justify-center md:gap-0' : '',
+						
+					]"
+				>
+					<span
+						v-if="item.active"
+						class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 rounded-r-full bg-green-400"
+					/>
+					
+					<Icon :name="item.icon!" :size="item.size ? item.size : '14'"  />
+					
+					<span
+						:class="[
+						'whitespace-nowrap overflow-hidden transition-all duration-300',
+						isCollapsed ? 'md:max-w-0 md:opacity-0' : 'md:max-w-[200px] md:opacity-100',
+						]"
+					>
+						{{ item.label }}
+					</span>
+
+					<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs
+						px-3 py-2 text-sm text-white bg-gray-800 rounded-md shadow-lg
+						opacity-0 invisible group-hover:opacity-100 group-hover:visible
+						transition-all duration-200 ease-in-out z-10"
+			 		>
+						Нужна авторизация
+					</div>
+
+					<Icon name="fluent-emoji-high-contrast:locked" size="16" />
+				</div>
+
 			</div>
 		</nav>
 
